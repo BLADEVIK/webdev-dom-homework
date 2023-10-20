@@ -9,7 +9,7 @@
   <body>
     <div class="container">
       <ul id="ul" class="comments">
-       <!-- Список рендерится из Js -->
+        <!-- Список рендерится из Js -->
       </ul>
       <div class="add-form">
         <input
@@ -40,103 +40,117 @@
     const ulElement = document.getElementById("ul");
 
     const commentsArray = [
-  {
-    name: 'Глеб Фокин',
-    date: '12.02.22 12:18',
-    comment: 'Это будет первый комментарий на этой странице',
-    like: 3,
-    userLike: false,
-    paint: ''
-  },
-  {
-    name: 'Варвара Н.',
-    date: '13.02.22 19:22',
-    comment: 'Мне нравится как оформлена эта страница! ❤',
-    like: 75,
-    userLike: true,
-    paint: '-active-like'
-  }
-];
-const likes = () => {
-  const likeButtons = document.querySelectorAll('.like-button');
-  for (const likeButton of likeButtons) {
-    likeButton.addEventListener('click', () => {
-      const index = likeButton.dataset.index;
-      if (commentsArray[index].userLike === false ) {
-        commentsArray[index].paint = '-active-like';
-        commentsArray[index].like += 1;
-        commentsArray[index].userLike = true;
-      } else {
-        commentsArray[index].paint = '';
-        commentsArray[index].like -= 1;
-        commentsArray[index].userLike = false;
-      }
-      renderComments();
-    });
-  };
-};
+      {
+        name: "Глеб Фокин",
+        date: "12.02.22 12:18",
+        comment: "Это будет первый комментарий на этой странице",
+        like: 3,
+        userLike: false,
+        paint: "",
+        isEdit: false,
+      },
+      {
+        name: "Варвара Н.",
+        date: "13.02.22 19:22",
+        comment: "Мне нравится как оформлена эта страница! ❤",
+        like: 75,
+        userLike: true,
+        paint: "-active-like",
+        isEdit: false,
+      },
+    ];
 
-const renderComments = () => {
-  const commentsHtml = commentsArray.map((item, index) =>{
-    return `
-    <li class="comment">
+    const answerComment = () => {
+      const commentAnswers = document.querySelectorAll(".comment");
+      for (const commentAnswer of commentAnswers) {
+        commentAnswer.addEventListener("click", () => {
+          textElement.value = `${commentAnswer.dataset.text}${commentAnswer.dataset.userName},
+          Ответ:`;
+        });
+      }
+    };
+
+    const likes = () => {
+      const likeButtons = document.querySelectorAll(".like-button");
+      for (const likeButton of likeButtons) {
+        likeButton.addEventListener("click", (event) => {
+          event.stopPropagation();
+
+          const index = likeButton.dataset.index;
+          if (commentsArray[index].userLike === false) {
+            commentsArray[index].paint = "-active-like";
+            commentsArray[index].like += 1;
+            commentsArray[index].userLike = true;
+          } else {
+            commentsArray[index].paint = "";
+            commentsArray[index].like -= 1;
+            commentsArray[index].userLike = false;
+          }
+          renderComments();
+        });
+      }
+    };
+    const deleteButtonsUser = () => {
+      const deleteButtons = document.querySelectorAll(".remove-button");
+      for (const deleteButton of deleteButtons) {
+        deleteButton.addEventListener("click", (event) => {
+          event.stopImmediatePropagation();
+          const index = deleteButton.dataset.index;
+          commentsArray.splice(index, 1);
+          renderComments();
+        });
+      }
+    };
+    const renderComments = () => {
+      const commentsHtml = commentsArray
+        .map((item, index) => {
+          return `
+          <li class="comment" data-user-name="${item.name}" data-text="${item.comment}">
           <div class="comment-header">
             <div>${item.name}</div>
             <div>${item.date}</div>
           </div>
-          <div class="comment-body">
-            <div class="comment-text">
-              ${item.comment}
-            </div>
+          <div class="comment-body">   
+                <div class = "comment-text">${item.comment}</div>
           </div>
           <div class="comment-footer">
+            <button data-index="${index}" class="remove-button">Удалить</button>
             <div class="likes">
               <span class="likes-counter">${item.like}</span>
               <button data-index='${index}' class="like-button ${item.paint}"</button>
             </div>
           </div>
-        </li>
-    `})
-    .join('');
-    ulElement.innerHTML = commentsHtml;
-    likes();
-};
-renderComments();
+        </li>`;
+        })
+        .join("");
+      ulElement.innerHTML = commentsHtml;
+      deleteButtonsUser();
+      answerComment();
+      likes();
+    };
+    renderComments();
 
-buttonElement.disabled = true;
-nameElement.addEventListener('input', () =>{
-  if ((nameElement.value === '') || (textElement.value ==='')) {
-    buttonElement.disabled = true;
-    return;
-  } else{
-    buttonElement.disabled = false;
-  }
-});
-textElement.addEventListener('input', () =>{
-  if ((nameElement.value === '') || (textElement.value ==='')) {
-    buttonElement.disabled = true;
-    return;
-  } else{
-    buttonElement.disabled = false;
-  }
-});
-buttonElement.addEventListener('click', () => {
-    nameElement.classList.remove('error');
-    textElement.classList.remove('error');
-    
-    if ((nameElement.value || textElement.value) === '') {
-      nameElement.classList.add('error');
-      textElement.classList.add('error');
-      return;
+    function validationInput() {
+      if (nameElement.value === "" || textElement.value === "") {
+        buttonElement.disabled = true;
+        return;
+      } else {
+        buttonElement.disabled = false;
+      }
     }
 
-    let currentDate = new Date();
+    buttonElement.disabled = true;
+    nameElement.addEventListener("input", validationInput);
+    textElement.addEventListener("input", validationInput);
+
+    buttonElement.addEventListener("click", () => {
+      let currentDate = new Date();
       let day = currentDate.getDate();
       let month = currentDate.getMonth() + 1;
       let year = currentDate.getFullYear();
       let hours = currentDate.getHours();
       let minutes = currentDate.getMinutes();
-      
+
       if (day < 10) {
         day = "0" + day;
       }
@@ -149,20 +163,32 @@ buttonElement.addEventListener('click', () => {
       if (minutes < 10) {
         minutes = "0" + minutes;
       }
-      let newformatDate = day + "." + month + "." + year + " " + hours + ":" + minutes;
-   
-      commentsArray.push({  
-      name: nameElement.value, 
-      date: newformatDate,
-      comment: textElement.value,
-      like: 0,
-      userLike: false,
-      paint: '',
-  });
-    renderComments();
-    nameElement.value = '';
-    textElement.value = '';
-    buttonElement.disabled = true;
-});
+      let newformatDate =
+        day + "." + month + "." + year + " " + hours + ":" + minutes;
+
+      commentsArray.push({
+        name: nameElement.value
+          .replaceAll("&", "&amp;")
+          .replaceAll("<", "&lt;")
+          .replaceAll(">", "&gt;")
+          .replaceAll('"', "&quot;"),
+
+        date: newformatDate,
+        comment: textElement.value
+          .replaceAll("&", "&amp;")
+          .replaceAll("<", "&lt;")
+          .replaceAll(">", "&gt;")
+          .replaceAll('"', "&quot;"),
+
+        like: 0,
+        userLike: false,
+        paint: "",
+        isEdit: false,
+      });
+      renderComments();
+      nameElement.value = "";
+      textElement.value = "";
+      buttonElement.disabled = true;
+    });
   </script>
 </html>
