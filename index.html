@@ -230,18 +230,13 @@ apiGet();
       }),
     });
     postCommentsPromise.then((res) => {
-      const jsonPromise = res.json();
-      jsonPromise.then((respDate)=>{
-       const jsonGetPromise=respDate.json()
-        commentsArray = jsonGetPromise.comments;
-      
-      });
+      apiGet()
     });
     renderComments()
     
-    });
       nameElement.value = "";
       textElement.value = "";
+    });
   </script>
 </html>
 
