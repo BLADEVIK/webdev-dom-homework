@@ -39,26 +39,56 @@
     const buttonElement = document.getElementById("buttonPush");
     const ulElement = document.getElementById("ul");
 
-    const commentsArray = [
-      {
-        name: "Глеб Фокин",
-        date: "12.02.22 12:18",
-        comment: "Это будет первый комментарий на этой странице",
-        like: 3,
-        userLike: false,
-        paint: "",
-        isEdit: false,
-      },
-      {
-        name: "Варвара Н.",
-        date: "13.02.22 19:22",
-        comment: "Мне нравится как оформлена эта страница! ❤",
-        like: 75,
-        userLike: true,
-        paint: "-active-like",
-        isEdit: false,
-      },
-    ];
+    const apiGet = () => {
+const fetchPromise = fetch("https://wedev-api.sky.pro/api/v1/viktor-pirogov/comments", {
+  method: "GET"
+});
+fetchPromise.then((response) => {
+
+  const jsonPromise = response.json();
+  jsonPromise.then((responseData) => {
+    // console.log(responseData);
+    const fromApp = responseData.comments.map((comment) => {
+
+      return {
+
+        name: comment.author.name,
+        userLike: comment.isLiked,
+        comment: comment.text,
+        like: comment.likes,
+        date: new Date(comment.date).toLocaleString(),
+
+      };
+    });
+    commentsArray = fromApp;
+
+    renderComments();
+  });
+});
+
+}
+apiGet();
+
+    let commentsArray = [];
+      // {
+      //   name: "Глеб Фокин",
+      //   date: "12.02.22 12:18",
+      //   comment: "Это будет первый комментарий на этой странице",
+      //   like: 3,
+      //   userLike: false,
+      //   paint: "",
+      //   isEdit: false,
+      // },
+      // {
+      //   name: "Варвара Н.",
+      //   date: "13.02.22 19:22",
+      //   comment: "Мне нравится как оформлена эта страница! ❤",
+      //   like: 75,
+      //   userLike: true,
+      //   paint: "-active-like",
+      //   isEdit: false,
+      // },
+    
 
     const answerComment = () => {
       const commentAnswers = document.querySelectorAll(".comment");
@@ -90,6 +120,8 @@
         });
       }
     };
+   
+
     const deleteButtonsUser = () => {
       const deleteButtons = document.querySelectorAll(".remove-button");
       for (const deleteButton of deleteButtons) {
@@ -124,6 +156,7 @@
         })
         .join("");
       ulElement.innerHTML = commentsHtml;
+      
       deleteButtonsUser();
       answerComment();
       likes();
@@ -166,29 +199,46 @@
       let newformatDate =
         day + "." + month + "." + year + " " + hours + ":" + minutes;
 
-      commentsArray.push({
-        name: nameElement.value
-          .replaceAll("&", "&amp;")
-          .replaceAll("<", "&lt;")
-          .replaceAll(">", "&gt;")
-          .replaceAll('"', "&quot;"),
+      // commentsArray.push({
+      //   name: nameElement.value
+      //     .replaceAll("&", "&amp;")
+      //     .replaceAll("<", "&lt;")
+      //     .replaceAll(">", "&gt;")
+      //     .replaceAll('"', "&quot;"),
 
-        date: newformatDate,
-        comment: textElement.value
-          .replaceAll("&", "&amp;")
-          .replaceAll("<", "&lt;")
-          .replaceAll(">", "&gt;")
-          .replaceAll('"', "&quot;"),
+      //   date: newformatDate,
+      //   comment: textElement.value
+      //     .replaceAll("&", "&amp;")
+      //     .replaceAll("<", "&lt;")
+      //     .replaceAll(">", "&gt;")
+      //     .replaceAll('"', "&quot;"),
 
-        like: 0,
-        userLike: false,
-        paint: "",
-        isEdit: false,
-      });
-      renderComments();
+      //   like: 0,
+      //   userLike: false,
+      //   paint: "",
+      //   isEdit: false,
+      // });
+      // renderComments();
+      
+      buttonElement.disabled = true;
+
+      const postCommentsPromise = fetch("https://wedev-api.sky.pro/api/v1/viktor-pirogov/comments", {
+      method: "POST",
+      body: JSON.stringify({
+        text: textElement.value,  
+        name: nameElement.value   
+      }),
+    });
+    postCommentsPromise.then((res) => {
+      apiGet()
+    });
+    renderComments()
+    
       nameElement.value = "";
       textElement.value = "";
-      buttonElement.disabled = true;
     });
   </script>
 </html>
+
+
+ 
