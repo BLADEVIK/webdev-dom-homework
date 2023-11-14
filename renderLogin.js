@@ -6,8 +6,8 @@ export function renderLogin() {
   const appHtml = document.getElementById("app");
   appHtml.innerHTML = `<div class = "formAvtorization" >
    <p> Страница авторизации</p>
-   <input placeholder="Имя" class = "inputLog inputLogin"></input>
-   <input placeholder="Пароль" class = "inputLog inputPassword"></input>
+   <input placeholder="Логин" class = "inputLog inputLogin"></input>
+   <input type="password" placeholder="Пароль" class = "inputLog inputPassword"></input>
    <button class = "buttonLog">Авторизоваться</button>
     </div>`;
     const loginBtn = document.querySelector(".buttonLog")
@@ -17,7 +17,8 @@ export function renderLogin() {
     login(inputLogin.value,inputPassword.value)
     .then((res)=>{
       setToken(res.user.token)
-      setUserName(res.user.login)
+      setUserName(res.user.name)
+      alert("Все верно!")
       renderData()
     })
     })
