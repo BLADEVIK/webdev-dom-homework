@@ -8,6 +8,7 @@ export function getToken() {
   return `Bearer ${token}`;
 }
 export let commentsArray = [];
+import { format } from "date-fns";
 export const apiGet = () => {
   getTodos().then((responseData) => {
     const fromApp = responseData.comments.map((comment) => {
@@ -16,7 +17,7 @@ export const apiGet = () => {
         userLike: comment.isLiked,
         comment: comment.text,
         like: comment.likes,
-        date: new Date(comment.date).toLocaleString(),
+        date: format(new Date(comment.date), "yyyy-MM-dd hh.mm.ss"),
       };
     });
     commentsArray = fromApp;
