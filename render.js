@@ -21,11 +21,10 @@ export const renderData = () => {
   <div class="add-form-row">
     <button id="buttonPush" class="add-form-button">Написать</button>
   </div>
-</div>`
-  const btnLoginHtml = `<div class="titleAddComment">Чтобы добавить коментарий,<span class="linkLoginForm">авторизуйтесь</span>  </div>`
+</div>`;
+  const btnLoginHtml = `<div class="titleAddComment">Чтобы добавить коментарий,<span class="linkLoginForm">авторизуйтесь</span>  </div>`;
   const renderComments = () => {
-
-    const commentsHtml =  commentsArray
+    const commentsHtml = commentsArray
       .map((item, index) => {
         return `
             <li class="comment" data-user-name="${item.name}" data-text="${item.comment}">
@@ -46,7 +45,7 @@ export const renderData = () => {
           </li>`;
       })
       .join("");
-      appHtml.innerHTML = `
+    appHtml.innerHTML = `
       <div class="commentsLoading">
       Пожалуйста подождите, комментарии загружаются...
     </div>
@@ -55,70 +54,69 @@ export const renderData = () => {
     </ul>
     <div class="commentLoading">Комментарий загружается...</div>
     
-    ${token ? formHtml : btnLoginHtml}`
- 
+    ${token ? formHtml : btnLoginHtml}`;
+
     actionForm();
   };
-  
-function actionForm(){
-  if (!token) return
-  const nameElement = document.getElementById("inputName");
-const textElement = document.getElementById("inputText");
-const buttonElement = document.getElementById("buttonPush");
-const commentLoadingElement = document.querySelector(".commentLoading");
-const formElement = document.querySelector(".add-form");
-if(userName){
-  nameElement.value=userName;
-  nameElement.disabled = true;
-}
-  function validationInput() {
-    if (nameElement.value === "" || textElement.value === "") {
-      buttonElement.disabled = true;
-      return;
-    } else {
-      buttonElement.disabled = false;
+
+  function actionForm() {
+    if (!token) return;
+    const nameElement = document.getElementById("inputName");
+    const textElement = document.getElementById("inputText");
+    const buttonElement = document.getElementById("buttonPush");
+    const commentLoadingElement = document.querySelector(".commentLoading");
+    const formElement = document.querySelector(".add-form");
+    if (userName) {
+      nameElement.value = userName;
+      nameElement.disabled = true;
     }
-  }
-  buttonElement.disabled = true;
-  nameElement.addEventListener("input", validationInput);
-  textElement.addEventListener("input", validationInput);
-  
-  buttonElement.addEventListener("click", () => {
+    function validationInput() {
+      if (nameElement.value === "" || textElement.value === "") {
+        buttonElement.disabled = true;
+        return;
+      } else {
+        buttonElement.disabled = false;
+      }
+    }
     buttonElement.disabled = true;
-    commentLoadingElement.classList.add("commentLoadingInvisible");
-    formElement.classList.add("add-formInvisible");
-    const postCommentsPromise = () => {
-      postTodo(textElement, nameElement)
-        .then((response) => {
-          if (response.status === 500) {
-            throw new Error("Неполадки с сервером");
-          } else if (response.status === 400) {
-            throw new Error("Недопустимое количество символов");
-          } else {
-            nameElement.value = "";
-            textElement.value = "";
-          }
-  
-          apiGet();
-        })
-        .catch((error) => {
-          if (error === "Failed to fetch") {
-            alert("Нет соединения с интернетом");
-          } else {
-            alert(error.message);
-          }
-        })
-        .finally(() => {
-          buttonElement.disabled = false;
-          commentLoadingElement.classList.remove("commentLoadingInvisible");
-          formElement.classList.remove("add-formInvisible"); 
-        });
-    };
-    postCommentsPromise();
-  });
-}
- 
- 
+    nameElement.addEventListener("input", validationInput);
+    textElement.addEventListener("input", validationInput);
+
+    buttonElement.addEventListener("click", () => {
+      buttonElement.disabled = true;
+      commentLoadingElement.classList.add("commentLoadingInvisible");
+      formElement.classList.add("add-formInvisible");
+      const postCommentsPromise = () => {
+        postTodo(textElement, nameElement)
+          .then((response) => {
+            if (response.status === 500) {
+              throw new Error("Неполадки с сервером");
+            } else if (response.status === 400) {
+              throw new Error("Недопустимое количество символов");
+            } else {
+              nameElement.value = "";
+              textElement.value = "";
+            }
+
+            apiGet();
+          })
+          .catch((error) => {
+            if (error === "Failed to fetch") {
+              alert("Нет соединения с интернетом");
+            } else {
+              alert(error.message);
+            }
+          })
+          .finally(() => {
+            buttonElement.disabled = false;
+            commentLoadingElement.classList.remove("commentLoadingInvisible");
+            formElement.classList.remove("add-formInvisible");
+          });
+      };
+      postCommentsPromise();
+    });
+  }
+
   const deleteButtonsUser = () => {
     const deleteButtons = document.querySelectorAll(".remove-button");
     for (const deleteButton of deleteButtons) {
@@ -143,7 +141,7 @@ if(userName){
                     ${commentAnswer.dataset.text}${commentAnswer.dataset.userName} 
                     QUOTE_END 
                     Ответ:  `;
-                    answerComment(textElement)
+        answerComment(textElement);
       });
     }
   };
@@ -177,7 +175,7 @@ if(userName){
           renderComments();
           likes();
           deleteButtonsUser();
-          answerComment()
+          answerComment();
         });
       });
     }
@@ -186,14 +184,12 @@ if(userName){
   likes();
   answerComment();
   deleteButtonsUser();
-  gotoLogin()
- 
+  gotoLogin();
 };
-export function gotoLogin(){
-  if(token) return
+export function gotoLogin() {
+  if (token) return;
   const loginButton = document.querySelector(".linkLoginForm");
-  loginButton.addEventListener("click",()=>{
+  loginButton.addEventListener("click", () => {
     renderLogin();
-  })
+  });
 }
-
