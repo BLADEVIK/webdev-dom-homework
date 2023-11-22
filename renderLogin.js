@@ -10,17 +10,15 @@ export function renderLogin() {
    <input type="password" placeholder="Пароль" class = "inputLog inputPassword"></input>
    <button class = "buttonLog">Авторизоваться</button>
     </div>`;
-    const loginBtn = document.querySelector(".buttonLog")
-    loginBtn.addEventListener("click",()=>{
-    const inputLogin =document.querySelector(".inputLogin");
-    const inputPassword =document.querySelector(".inputPassword");
-    login(inputLogin.value,inputPassword.value)
-    .then((res)=>{
-      setToken(res.user.token)
-      setUserName(res.user.name)
-      alert("Все верно!")
-      renderData()
-    })
-    })
+  const loginBtn = document.querySelector(".buttonLog");
+  loginBtn.addEventListener("click", () => {
+    const inputLogin = document.querySelector(".inputLogin");
+    const inputPassword = document.querySelector(".inputPassword");
+    login(inputLogin.value, inputPassword.value).then((res) => {
+      setToken(res.user.token);
+      setUserName(res.user.name);
+      alert("Все верно!");
+      renderData();
+    });
+  });
 }
-

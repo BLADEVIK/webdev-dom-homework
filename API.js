@@ -35,6 +35,6 @@ export function login(login, password) {
   });
 }
 export let userName;
-export const setUserName = (newUserName)=>{
+export const setUserName = (newUserName) => {
   userName = newUserName;
-}
+};
