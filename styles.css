@@ -73,6 +73,7 @@ body {
 /* Ссылка на логин */
 .linkLoginForm {
   color: #5de911;
+  cursor: pointer;
 }
 
 /* надпись на логин */
